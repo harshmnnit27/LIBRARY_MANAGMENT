@@ -2,7 +2,7 @@ import mongoose  from "mongoose";
 
 export const connectDB =  ()=>{
     mongoose.connect(process.env.MONGO_URI,{
-        dbName:"LIBARAY MANAGMENT SYSTEM"
+        dbName:"library_management_system"
     }).then(()=>{
         console.log(`Database connected succesfully`)
     }).catch(err=>{
