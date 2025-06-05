@@ -3,7 +3,7 @@ import { sendEmail } from "./sendEmail.js";
 
 export async function sendVerificationCode(verificationCode,email,res){
     try {
-        const message = generateVerificationOtpEmailTemplate();
+        const message = generateVerificationOtpEmailTemplate(verificationCode);
         sendEmail({
             email,
             subject:"Verification code(Library Managment System)",

@@ -31,8 +31,4 @@ connectDB();
 // Error Handling Middleware
 app.use(errorMiddleware);
 
-// Start the Server ✅ Fix: Added app.listen
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+
