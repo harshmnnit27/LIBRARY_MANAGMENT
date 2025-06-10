@@ -1,60 +1,44 @@
-class ErrorHandler extends Error{
-
-    constructor(message, statusCode){
-        super(message);
-        this.statusCode=statusCode;
-    }
-
+class ErrorHandler extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+  }
 }
 
-export const login = (req, res, next)=>{}
+export const login = (req, res, next) => {}; // placeholder
 
-export const errorMiddleware = (err, req, res, next)=>{
-    err.message=err.message || "Internal server error";
-    err.statusCode=err.statusCode || 500;
+export const errorMiddleware = (err, req, res, next) => {
+  err.message = err.message || "Internal server error";
+  err.statusCode = err.statusCode || 500;
 
+  // MongoDB duplicate‑key error
+  if (err.code === 11000) {
+    err = new ErrorHandler("Duplicate field value entered", 400);
+  }
 
+  // Invalid JWT
+  if (err.name === "JsonWebTokenError") {
+    err = new ErrorHandler("JSON Web Token is invalid. Try again.", 400);
+  }
 
-    if(err.code === 11000){
-        const statusCode=400;
-        const message=`Duplicate failed value entered`;
-        err = new ErrorHandler(message,statusCode)
-    }
+  // Expired JWT                      ↓↓↓ corrected
+  if (err.name === "TokenExpiredError") {                // <<<
+    err = new ErrorHandler("JSON Web Token has expired. Try again.", 400); // <<<
+  }
 
-    if(err.name === "JsonWebTokenError"){
-        const statusCode=400;
-        const message=`Json web token is invalid. Try again`;
-        err = new ErrorHandler(message,statusCode)
+  // Wrong Mongo ObjectId             ↓↓↓ corrected
+  if (err.name === "CastError") {                        // <<<
+    err = new ErrorHandler(`Resource not found. Invalid: ${err.path}`, 400); // <<<
+  }
 
-    }
-
-    if(err.name === "TokemExpiredError"){
-        const statusCode=400;
-        const message=`Json web token is expired. Try again`;
-        err = new ErrorHandler(message,statusCode)
-
-    }
-
-    if(err.name==="CasteError"){
-        const statusCode=400;
-        const message=`Resource not found. Invalid: ${err.path}`;
-        err = new ErrorHandler(message,statusCode)
-
-
-    }
-    const errorMessage = err.errors 
-    ? Object.values(err.errors)
-    .map((error)=>error.message)
-    .join(" ")
+  const errorMessage = err.errors
+    ? Object.values(err.errors).map(e => e.message).join(" ")
     : err.message;
 
-
-    return res.status(err.statusCode).json({
-        success: false,
-        message: errorMessage,
-    })
-}
+  return res.status(err.statusCode).json({
+    success: false,
+    message: errorMessage,
+  });
+};
 
 export default ErrorHandler;
-
-
