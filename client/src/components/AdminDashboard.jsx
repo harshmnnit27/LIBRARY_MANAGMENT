@@ -17,6 +17,9 @@ import {
 } from "chart.js";
 import logo from "../assets/black-logo.png";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useEffect } from "react";
+import Header from "../layout/Header";
 
 ChartJS.register(
   CategoryScale,
@@ -38,7 +41,7 @@ const AdminDashboard = () => {
   const {settingPopup} = useSelector(state => state.auth);
 
   const [totalUsers, setTotalUsers] = useState(0);
-  const [totalAdmin, setTotalAdmin] = useState(0);
+  const [totalAdmins, setTotalAdmins] = useState(0);
   const [totalBooks, setTotalBooks] = useState((books && books.length) || 0);
   const [totalBorrowedBooks, setTotalBorrowedBooks] = useState(0);
   const [totalReturnedBooks, setTotalReturnedBooks] = useState(0);
@@ -47,7 +50,7 @@ const AdminDashboard = () => {
     let numberOfUsers = users.filter(user => user.role === "User");
     let numberOfAdmins = users.filter(user => user.role === "Admin");
     setTotalUsers(numberOfUsers.length);
-    setTotalAdmin(numberOfAdmins.length);
+    setTotalAdmins(numberOfAdmins.length);
 
     let numberOfTotalBorrowedBooks = allBorrowedBooks.filter(
       (book) => book.returnDate === null
@@ -66,7 +69,7 @@ const AdminDashboard = () => {
     datasets: [
       {
         data: [totalBorrowedBooks, totalReturnedBooks],
-        backgroundColor: ["#3DE3E3E", "#151619"],
+        backgroundColor: ["#3D3E3E", "#151619"],
         hoverOffset: 4,
       },
     ],
@@ -137,10 +140,10 @@ const AdminDashboard = () => {
             <div className="flex flex-col lg:flex-row flex-1">
             <div className="flex flex-col lg:flex-row flex-1 items-center justify-center">
               <div className="bg-white p-5 rounded-lg h-full flex flex-col justify-center items-center gap-4">
-                <img src={user && user.avatar?.url} alt="avatar" className="rounded-full w-32 h-32 object-cover" />
+                <img src={user?.avatar?.url || "/default-avatar.png"} alt="avatar" className="rounded-full w-32 h-32 object-cover" />
                 <h2 className="text-xl 2xl:text-2xl font-semibold text-center ">{user && user.name}</h2>
                 <p className="text-gray-600 text-sm 2xl:text-base text-center">
-                  Welcome to your admin dashboard. Here you can manage al the settings and monitor the statistics.
+                  Welcome to your admin dashboard. Here you can manage all the settings and monitor the statistics.
                 </p>
               </div>
             </div>
