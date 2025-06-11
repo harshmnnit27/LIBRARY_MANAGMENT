@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import adminIcon from "../assets/pointing.png";
 import usersIcon from "../assets/people-black.png";
 import bookIcon from "../assets/book-square.png";
@@ -17,6 +17,7 @@ import {
 } from "chart.js";
 import logo from "../assets/black-logo.png";
 import { useSelector } from "react-redux";
+import Header from "../layout/Header"
 
 ChartJS.register(
   CategoryScale,
@@ -38,7 +39,7 @@ const AdminDashboard = () => {
   const {settingPopup} = useSelector(state => state.auth);
 
   const [totalUsers, setTotalUsers] = useState(0);
-  const [totalAdmin, setTotalAdmin] = useState(0);
+  const [totalAdmins, setTotalAdmins] = useState(0);
   const [totalBooks, setTotalBooks] = useState((books && books.length) || 0);
   const [totalBorrowedBooks, setTotalBorrowedBooks] = useState(0);
   const [totalReturnedBooks, setTotalReturnedBooks] = useState(0);
@@ -47,7 +48,7 @@ const AdminDashboard = () => {
     let numberOfUsers = users.filter(user => user.role === "User");
     let numberOfAdmins = users.filter(user => user.role === "Admin");
     setTotalUsers(numberOfUsers.length);
-    setTotalAdmin(numberOfAdmins.length);
+    setTotalAdmins(numberOfAdmins.length);
 
     let numberOfTotalBorrowedBooks = allBorrowedBooks.filter(
       (book) => book.returnDate === null
