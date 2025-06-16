@@ -227,4 +227,13 @@ export const updatePassword = (data) => async (dispatch) => {
   }
 };
 
+export const logoutUser = () => async (dispatch) => {
+  try {
+    await axios.get("/api/auth/logout", { withCredentials: true });
+  } catch {
+    // ignore error
+  }
+  dispatch(logout());
+};
+
 export default authSlice.reducer;

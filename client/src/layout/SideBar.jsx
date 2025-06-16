@@ -10,20 +10,22 @@ import settingIcon from "../assets/setting-white.png";
 import usersIcon from "../assets/people.png";
 import { RiAdminFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, resetAuthSlice } from "../store/slices/authSlice";
+import { logoutUser, resetAuthSlice } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
-import { toggleAddNewAdminPopup } from "../store/slices/popUpSlice";
+import { toggleAddNewAdminPopup, toggleSettingPopup } from "../store/slices/popUpSlice";
 import AddNewAdmin from "../popups/AddNewAdmin";
 import SettingPopup from "../popups/SettingPopup";
-
+import { useNavigate } from "react-router-dom";
 
 const SideBar = ({ isSideBarOpen, setIsSideBarOpen, setSelectedComponent }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { addNewAdminPopup, settingPopup } =useSelector(state => state.popup)
   const { loading, error, message, user, isAuthenticated } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logoutUser());
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -130,6 +132,7 @@ export default SideBar;
 // import { toggleAddNewAdminPopup, toggleSettingPopup } from "../store/slices/popUpSlice";
 // import AddNewAdmin from "../popups/AddNewAdmin";
 // import SettingPopup from "../popups/SettingPopup";
+// import { useNavigate } from "react-router-dom";
 
 // // MOCK DATA FOR PREVIEW
 // const loading = false;
@@ -140,10 +143,12 @@ export default SideBar;
 
 // const SideBar = ({ isSideBarOpen, setIsSideBarOpen, setSelectedComponent }) => {
 //   const dispatch = useDispatch();
+//   const navigate = useNavigate();
 //   const { addNewAdminPopup, settingPopup } = useSelector(state => state.popup);
 
 //   const handleLogout = () => {
 //     dispatch(logout());
+//     navigate("/login");
 //   };
 
 //   useEffect(() => {
