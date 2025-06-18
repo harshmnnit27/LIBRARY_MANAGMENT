@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toggleRecordBookPopup } from "./popUpSlice";
 
+const API_BASE = "http://localhost:4000";
+
 const borrowSlice = createSlice({
     name: "borrow",
     initialState: {
@@ -91,9 +93,9 @@ export const fetchUserBorrowedBooks = ()=>async(dispatch)=>{
     });
 };
 
-export const fetchAllBorrowedBooks = ()=>async(dispatch)=>{
+export const fetchAllBorrowedBooks = () => async (dispatch) => {
     dispatch(borrowSlice.actions.fetchAllBorrowedBooksRequest());
-    await axios.get("", { withCredentials: true}).then((res)=>{
+    await axios.get(`${API_BASE}/api/borrow/all`, { withCredentials: true }).then((res)=>{
         dispatch(
             borrowSlice.actions.fetchAllBorrowedBooksSuccess(
                 res.data.borrowedBooks
