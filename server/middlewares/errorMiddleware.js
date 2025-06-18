@@ -8,6 +8,8 @@ class ErrorHandler extends Error {
 export const login = (req, res, next) => {}; // placeholder
 
 export const errorMiddleware = (err, req, res, next) => {
+  console.error(err); // Log all errors to the console
+
   err.message = err.message || "Internal server error";
   err.statusCode = err.statusCode || 500;
 
