@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import logo from "../assets/black-logo.png";
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import logo_with_title from "../assets/logo-with-title.png";
 import {useDispatch, useSelector} from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { resetAuthSlice } from "../store/slices/authSlice";
+import { resetAuthSlice, register } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 
 const Register = () => {
@@ -14,12 +15,12 @@ const Register = () => {
 
   const dispatch = useDispatch();
 
-  const {loading, error, message, user, isAuthenticated} =useSelector(state => state.auth);
+  const {loading, error, message, isAuthenticated} =useSelector(state => state.auth);
   const navigateTo = useNavigate();
 
   const handleRegister = (e)=>{
     e.preventDefault();
-    const date = new FormData();
+    const data = new FormData();
     data.append("name", name);
     data.append("email", email);
     data.append("password", password);
@@ -34,7 +35,7 @@ const Register = () => {
       toast.error(error);
       dispatch(resetAuthSlice());
     }
-  }, [dispatch, isAuthenticated, error, loading]);
+  }, [dispatch, error, loading, message, navigateTo, email]);
 
   if(isAuthenticated){
     return <Navigate to={"/"} />;
@@ -73,7 +74,7 @@ const Register = () => {
           </div>
 
           <div className="mb-2">
-            <input type="password" value={password} onChange={(e) => setName(e.target.value)} placeholder="Password" className="w-full px-4 py-3 border border-black rounded-md focus:outline-none" />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="w-full px-4 py-3 border border-black rounded-md focus:outline-none" />
           </div>
           <div className="block md:hidden font-semibold mt-5">
             <p>Already havev Account?</p>
