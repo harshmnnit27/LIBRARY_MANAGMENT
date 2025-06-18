@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_BASE = "http://localhost:4000";
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -142,7 +144,7 @@ export const {
 export const register = (data) => async (dispatch) => {
   dispatch(registerRequest());
   try {
-    const res = await axios.post("/api/auth/register", data, {
+    const res = await axios.post(`${API_BASE}/api/v1/auth/register`, data, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
@@ -155,7 +157,7 @@ export const register = (data) => async (dispatch) => {
 export const otpVerification = (email, otp) => async (dispatch) => {
   dispatch(otpVerificationRequest());
   try {
-    const res = await axios.post("/api/auth/verify-otp", { email, otp }, {
+    const res = await axios.post(`${API_BASE}/api/v1/auth/verify-otp`, { email, otp }, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
@@ -168,7 +170,7 @@ export const otpVerification = (email, otp) => async (dispatch) => {
 export const login = (data) => async (dispatch) => {
   dispatch(loginRequest());
   try {
-    const res = await axios.post("/api/auth/login", data, {
+    const res = await axios.post(`${API_BASE}/api/v1/auth/login`, data, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
@@ -181,7 +183,7 @@ export const login = (data) => async (dispatch) => {
 export const forgotPassword = (email) => async (dispatch) => {
   dispatch(forgotPasswordRequest());
   try {
-    const res = await axios.post("/api/auth/forgot-password", { email }, {
+    const res = await axios.post(`${API_BASE}/api/v1/auth/forgot-password`, { email }, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
@@ -194,7 +196,7 @@ export const forgotPassword = (email) => async (dispatch) => {
 export const resetPassword = (token, passwords) => async (dispatch) => {
   dispatch(resetPasswordRequest());
   try {
-    const res = await axios.post(`/api/auth/reset-password/${token}`, passwords, {
+    const res = await axios.post(`${API_BASE}/api/v1/auth/reset-password/${token}`, passwords, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
@@ -207,20 +209,31 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
 export const getUser = () => async (dispatch) => {
   dispatch(getUserRequest());
   try {
-    const res = await axios.get("/api/auth/me", {
+    const res = await axios.get(`${API_BASE}/api/v1/auth/me`, {
       withCredentials: true,
     });
+    if (!res.data || !res.data.user) {
+      dispatch(getUserFailed("No user returned from backend"));
+      dispatch(logout());
+      return;
+    }
     dispatch(getUserSuccess(res.data));
   } catch (error) {
-    dispatch(getUserFailed(error.response?.data?.message || "Failed to fetch user"));
+    if (error.response && error.response.status === 401) {
+      // If unauthorized, force logout and do not treat as crash
+      dispatch(getUserFailed("Unauthorized. Please log in."));
+      dispatch(logout());
+    } else {
+      dispatch(getUserFailed(error.response?.data?.message || "Failed to fetch user"));
+      dispatch(logout());
+    }
   }
 };
 
 export const updatePassword = (data) => async (dispatch) => {
   dispatch(authSlice.actions.updatePasswordRequest());
-
   try {
-    const response = await axios.post('/api/update-password', data); // Adjust URL as needed
+    const response = await axios.post(`${API_BASE}/api/v1/auth/update-password`, data); // Adjust URL as needed
     dispatch(authSlice.actions.updatePasswordSuccess(response.data));
   } catch (error) {
     dispatch(authSlice.actions.updatePasswordFailure(error.response?.data || error.message));
@@ -229,7 +242,7 @@ export const updatePassword = (data) => async (dispatch) => {
 
 export const logoutUser = () => async (dispatch) => {
   try {
-    await axios.get("/api/auth/logout", { withCredentials: true });
+    await axios.get(`${API_BASE}/api/v1/auth/logout`, { withCredentials: true });
   } catch {
     // ignore error
   }
