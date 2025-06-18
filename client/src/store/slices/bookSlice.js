@@ -3,6 +3,8 @@ import axios from "axios"
 import { toggleAddBookPopup } from "./popUpSlice";
 import { toast } from "react-toastify";
 
+const API_BASE = "http://localhost:4000";
+
 const bookSlice = createSlice({
     name: "book",
     initialState: {
@@ -47,13 +49,14 @@ const bookSlice = createSlice({
     },
 });
 
-export const fetchAllBooks = ()=>async (dispatch)=>{
+export const fetchAllBooks = () => async (dispatch) => {
     dispatch(bookSlice.actions.fetchBooksRequest());
-    await axios.get("", {withCredentials: true}).then(res=>{
-        dispatch(bookSlice.actions.fetchBooksSuccess(res.data.books))
-    }).catch(err=>{
-        dispatch(bookSlice.actions.fetchBooksFailed(err.response.data.message));
-    })
+    try {
+        const res = await axios.get(`${API_BASE}/api/v1/book/all`, { withCredentials: true });
+        dispatch(bookSlice.actions.fetchBooksSuccess(res.data.books));
+    } catch (error) {
+        dispatch(bookSlice.actions.fetchBooksFailed(error.response?.data?.message || "Failed to fetch books"));
+    }
 }
 
 export const addBook = ()=>async(dispatch)=>{

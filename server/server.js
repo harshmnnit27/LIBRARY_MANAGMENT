@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import {app} from "./app.js";
 import {v2 as cloudinary} from "cloudinary"
 
