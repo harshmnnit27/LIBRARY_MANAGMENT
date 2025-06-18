@@ -3,6 +3,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { toggleAddNewAdminPopup } from "./popUpSlice";
 
+const API_BASE = "http://localhost:4000";
+
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -36,7 +38,7 @@ const userSlice = createSlice({
 
 export const fetchAllUsers = ()=>async (dispatch) => {
     dispatch(userSlice.actions.fetchAllUsersRequest());
-    await axios.get("", {withCredentials: true}).then(res => {
+    await axios.get(`${API_BASE}/api/user/all`, {withCredentials: true}).then(res => {
         dispatch(userSlice.actions.fetchAllUsersSuccess(res.data.users))
     }).catch(err=>{
         dispatch(userSlice.actions.fetchAllUsersFailed(err.response.data.message))
