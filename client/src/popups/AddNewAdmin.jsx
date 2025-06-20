@@ -8,7 +8,7 @@ import { toggleAddNewAdminPopup } from "../store/slices/popUpSlice";
 
 const AddNewAdmin = () => {
   const dispatch = useDispatch();
-  const {} =useSelector(state => state.user);
+  const { loading } =useSelector(state => state.user);
   
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

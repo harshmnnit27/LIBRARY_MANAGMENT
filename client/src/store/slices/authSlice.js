@@ -183,7 +183,7 @@ export const login = (data) => async (dispatch) => {
 export const forgotPassword = (email) => async (dispatch) => {
   dispatch(forgotPasswordRequest());
   try {
-    const res = await axios.post(`${API_BASE}/api/v1/auth/forgot-password`, { email }, {
+    const res = await axios.post(`${API_BASE}/api/v1/auth/password/forgot`, { email }, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });

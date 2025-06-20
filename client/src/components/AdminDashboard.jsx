@@ -141,7 +141,7 @@ const AdminDashboard = () => {
                 <img src={user && user.avatar?.url} alt="avatar" className="rounded-full w-32 h-32 object-cover" />
                 <h2 className="text-xl 2xl:text-2xl font-semibold text-center ">{user && user.name}</h2>
                 <p className="text-gray-600 text-sm 2xl:text-base text-center">
-                  Welcome to your admin dashboard. Here you can manage al the settings and monitor the statistics.
+                  Welcome to your admin dashboard. Here you can manage all the settings and monitor the statistics.
                 </p>
               </div>
             </div>

@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BookA, NotebookPen, NotebookPenIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleAddBookPopup, toggleRecordBookPopup } from "../store/slices/popUpSlice";
+import { toggleAddBookPopup, toggleReadBookPopup, toggleRecordBookPopup } from "../store/slices/popUpSlice";
 import { toast } from "react-toastify";
 import { fetchAllBooks, resetBookSlice } from "../store/slices/bookSlice";
 import { fetchAllBorrowedBooks, resetBorrowSlice } from "../store/slices/borrowSlice";
 import Header from "../layout/Header";
+import AddBookPopup from "../popups/AddBookPopup";
+import ReadBookPopup from "../popups/ReadBookPopup";
+import RecordBookPopup from "../popups/RecordBookPopup";
+
 
 const BookManagement = () => {
 

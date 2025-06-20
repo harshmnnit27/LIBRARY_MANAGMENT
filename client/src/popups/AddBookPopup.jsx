@@ -10,7 +10,7 @@ const AddBookPopup = () => {
 
   const [title, setTitle]=useState("");
   const [author, setAuthor]=useState("");
-  const [price, setprice]=useState("");
+  const [price, setPrice]=useState("");
   const [quantity, setQuantity]=useState("");
   const [description, setDescription]=useState("");
 

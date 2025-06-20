@@ -69,6 +69,6 @@ if (!cloudinaryResponse || cloudinaryResponse.error) {
 res.status(201).json({
   success: true,
   message: "Admin registered successfully.",
-  admin,
+  admin: user,
 });
 });

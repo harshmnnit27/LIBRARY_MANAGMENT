@@ -3,6 +3,7 @@ import { BookA } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleReadBookPopup } from "../store/slices/popUpSlice";
 import ReadBookPopup from "../popups/ReadBookPopup";
+import Header from "../layout/Header";
 
 const MyBorrowedBooks = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const MyBorrowedBooks = () => {
     const formatDate = (timeStamp)=>{
       //console.log(typeof timeStamp);
       const date = new Date(timeStamp);
-      const formattedDate =`${String(date.getDate()).padStart(2, 0)}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getFullYear())}` ;
+      const formattedDate =`${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getFullYear())}` ;
       const formattedTime = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}` ;
       const result = `${formattedDate} ${formattedTime}` ;
       return result;
@@ -61,7 +62,7 @@ const MyBorrowedBooks = () => {
                 <tr className="bg-gray-200">
                   <th className="px-4 py-2 text-left">ID</th>
                   <th className="px-4 py-2 text-left">Book Title</th>
-                  <th className="px-4 py-2 text-left">Date & Time<Textarea></Textarea>ime</th>
+                  <th className="px-4 py-2 text-left">Date & Time</th>
                   <th className="px-4 py-2 text-left">Due Date</th>
                   <th className="px-4 py-2 text-left">Returned</th>
                   <th className="px-4 py-2 text-left">View</th>

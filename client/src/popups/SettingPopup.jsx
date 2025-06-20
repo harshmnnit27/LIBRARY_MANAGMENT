@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import closeIcon from "../assets/close-square.png";
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePassword } from '../store/slices/authSlice';
@@ -58,7 +58,7 @@ const SettingPopup = () => {
 
             <div className="flex gap-4 mt-10">
             <button type="button" onClick={()=>dispatch(toggleSettingPopup())} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">CANCEL</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 bg-black rounded-md hover:bg-gray-800">CONFIRM</button>
+            <button type="submit" disabled={loading} className="px-4 py-2 bg-gray-600 rounded-md hover:bg-slate-400">CONFIRM</button>
 
             </div>
           </form>

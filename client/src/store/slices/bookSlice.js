@@ -59,9 +59,9 @@ export const fetchAllBooks = () => async (dispatch) => {
     }
 }
 
-export const addBook = ()=>async(dispatch)=>{
+export const addBook = (data) =>async(dispatch)=>{
     dispatch(bookSlice.actions.addBookRequest());
-    await axios.post("", data, {
+    await axios.post(`${API_BASE}/api/v1/book/admin/add`, data, {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json"

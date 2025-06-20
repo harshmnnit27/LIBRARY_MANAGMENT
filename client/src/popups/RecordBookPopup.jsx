@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { recordBorrowBook } from '../store/slices/borrowSlice';
 import { toggleReadBookPopup, toggleRecordBookPopup } from '../store/slices/popUpSlice';
@@ -29,7 +29,7 @@ const RecordBookPopup = ({bookId}) => {
             <div className="flex justify-end space-x-4">
               <button className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300" 
               type="button" 
-              onClick={()=>{dispatch(toggleRecordBookPopup)}}
+              onClick={()=>{dispatch(toggleRecordBookPopup())}}
               >
                 Close
               </button>
