@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toggleRecordBookPopup } from "./popUpSlice";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 const borrowSlice = createSlice({
     name: "borrow",
