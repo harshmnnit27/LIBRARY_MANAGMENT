@@ -18,7 +18,7 @@ export function generateVerificationOtpEmailTemplate(otpCode) {
           If you did not request this email, please ignore it.
         </p>
         <footer style="margin-top: 20px; text-align: center; font-size: 14px; color: #666;">
-          <p>Thank you,<br>BookWorm Team</p>
+          <p>Thank you,<br>Granthamitra Team</p>
           <p style="font-size: 12px; color: #444;">This is an automated message. Please do not reply to this email.</p>
         </footer>
       </div>
@@ -41,7 +41,7 @@ export function generateVerificationOtpEmailTemplate(otpCode) {
       <p style="font-size: 16px; color: #ccc;">If the button above doesn’t work, copy and paste the following URL into your browser:</p>
       <p style="font-size: 16px; color: #fff; word-wrap: break-word;">${resetPasswordUrl}</p>
       <footer style="margin-top: 20px; text-align: center; font-size: 14px; color: #666;">
-        Thank you,<br>BookWorm Team
+        Thank you,<br>Granthamitra Team
       </footer>
       <p style="font-size: 12px; color: #444;">This is an automated message. Please do not reply to this email.</p>
     </div>

@@ -172,7 +172,7 @@ export const forgotPassword = catchAsyncErrors(async(req,res,next)=>{
 
     try{
         await sendEmail({email:user.email,
-            subject:"Bookworm Library Managment System Password Recovery",
+            subject:"Granthamitra Library Management System Password Recovery",
             message,
         })
         res.status(200).json({

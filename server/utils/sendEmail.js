@@ -46,7 +46,7 @@ export const sendEmail = async ({ email, subject, message }) => {
     });
 
     const mailOptions = {
-      from: `"BookWorm" <${process.env.SMTP_MAIL}>`,
+      from: `"Granthamitra" <${process.env.SMTP_MAIL}>`,
       to: email,
       subject,
       html: message,

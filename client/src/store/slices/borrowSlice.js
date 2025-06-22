@@ -81,12 +81,12 @@ export const fetchUserBorrowedBooks = ()=>async(dispatch)=>{
     dispatch(borrowSlice.actions.fetchUserBorrowedBooksRequest());
     await axios.get(`${API_BASE}/api/v1/borrow/my-borrowed-books`, { withCredentials: true}).then((res)=>{
         dispatch(
-            borrowSlice.actions.fetchAllBorrowedBooksSuccess(
-                res.data.BorrowedBooks
+            borrowSlice.actions.fetchUserBorrowedBooksSuccess(
+                res.data.borrowedBooks
             )
         );
     }).catch(err=>{
-        dispatch(borrowSlice.actions.fetchAllBorrowedBooksFailed(
+        dispatch(borrowSlice.actions.fetchUserBorrowedBooksFailed(
             err.response.data.message
         )
     );
@@ -109,9 +109,9 @@ export const fetchAllBorrowedBooks = () => async (dispatch) => {
     });
 };
 
-export const recordBorrowBook =(email, id)=>async(dispatch)=>{
+export const recordBorrowBook =({email, bookId})=>async(dispatch)=>{
     dispatch(borrowSlice.actions.recordBookRequest());
-    await axios.post("",
+    await axios.post(`${API_BASE}/api/v1/borrow/record-borrow-book/${bookId}`,
         {email},{
             withCredentials:true,
             headers: {
@@ -126,9 +126,9 @@ export const recordBorrowBook =(email, id)=>async(dispatch)=>{
     });
 };
 
-export const returnBook =(email,id)=>()=>async(dispatch)=>{
+export const returnBook = ({ email, bookId }) => async(dispatch) => {
     dispatch(borrowSlice.actions.returnBookRequest());
-    await axios.put("",
+    await axios.put(`${API_BASE}/api/v1/borrow/return-borrowed-book/${bookId}`,
        {email},
        {
         withCredentials: true,
@@ -139,7 +139,7 @@ export const returnBook =(email,id)=>()=>async(dispatch)=>{
     ).then(res=>{
         dispatch(borrowSlice.actions.returnBookSuccess(res.data.message));
     }).catch(err=>{
-        dispatch(borrowSlice.actions.return(err.response.data.message));
+        dispatch(borrowSlice.actions.returnBookFailed(err.response.data.message));
     });
 };
 

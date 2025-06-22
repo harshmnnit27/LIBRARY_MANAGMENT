@@ -19,7 +19,7 @@ const sendTestEmail = async () => {
     const info = await transporter.sendMail({
       from: process.env.SMTP_MAIL,
       to: process.env.SMTP_MAIL, // send to yourself
-      subject: "Test Email from Bookworm",
+      subject: "Test Email from Granthamitra",
       html: `<p>This is a test email to verify SMTP configuration.</p>`,
     });
 

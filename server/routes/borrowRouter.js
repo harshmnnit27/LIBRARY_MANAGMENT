@@ -16,7 +16,7 @@ import{
 
 const router = express.Router();
 
-router.post("/record-borrow-book/:id",isAuthenticated,isAuthorized("Admin"),recordBorrowedBook);
+router.post("/record-borrow-book/:bookId",isAuthenticated,isAuthorized("Admin"),recordBorrowedBook);
 
 router.get("/borrowed-books-by-users",isAuthenticated,isAuthorized("Admin"),getBorrowedBooksForAdmin)
 
