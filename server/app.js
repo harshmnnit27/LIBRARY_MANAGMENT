@@ -47,4 +47,8 @@ connectDB();
 
 app.use(errorMiddleware);
 
+app.get("/", (req, res) => {
+    res.send("API WORKING");
+})
+
 
