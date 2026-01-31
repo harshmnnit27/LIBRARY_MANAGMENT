@@ -13,6 +13,7 @@ import { notifyUsers } from "./services/notifyUsers.js";
 import { removeUnverifiedAccounts } from "./services/removeUnverifiedAccounts.js";
 
 export const app = express();
+const port=process.env.port || 4000;
 
 
 config();
