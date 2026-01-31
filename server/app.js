@@ -11,12 +11,12 @@ import userRouter from "./routes/userRouter.js"
 import expressFileupload from "express-fileupload"
 import { notifyUsers } from "./services/notifyUsers.js";
 import { removeUnverifiedAccounts } from "./services/removeUnverifiedAccounts.js";
-
+config();
 export const app = express();
 const port=process.env.port || 4000;
 
 
-config();
+
 
 
 app.use(cors({
@@ -24,6 +24,10 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }));
+
+connectDB();
+
+
 
 app.use(cookieParser()); // 
 app.use(express.json());
@@ -43,7 +47,7 @@ app.use("/api/v1/user", userRouter);
 
 notifyUsers();
 removeUnverifiedAccounts();
-connectDB();
+
 
 
 app.use(errorMiddleware);
@@ -51,5 +55,7 @@ app.use(errorMiddleware);
 app.get("/", (req, res) => {
     res.send("API WORKING");
 })
+
+
 
 
