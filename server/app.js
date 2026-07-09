@@ -25,11 +25,14 @@ app.use(cors({
         if (!origin) return callback(null, true);
         
         const allowedOrigins = [
-            process.env.FRONTEND_URL?.replace(/\/$/, ""), // Strips trailing slash
+            process.env.FRONTEND_URL?.replace(/\/$/, ""),
             process.env.BACKEND_URL?.replace(/\/$/, ""),
-            "http://localhost:5173", // Keep local dev working
-            "http://localhost:5174"
-        ];
+            "http://localhost:5173",
+            "http://localhost:5174",
+            // Hardcoded Render URLs as fallback in case env vars are not set
+            "https://granthamitra-client.onrender.com",
+            "https://granthamitra.onrender.com",
+        ].filter(Boolean); // remove undefined/null entries
         
         if (allowedOrigins.includes(origin)) {
             callback(null, true);
