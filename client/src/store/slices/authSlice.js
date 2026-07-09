@@ -157,8 +157,12 @@ export const {
 // Async Thunks
 export const register = (data) => async (dispatch) => {
   dispatch(registerRequest());
+  // Convert FormData to plain object for JSON sending
+  const payload = data instanceof FormData
+    ? Object.fromEntries(data.entries())
+    : data;
   try {
-    const res = await axios.post(`${API_BASE}/api/v1/auth/register`, data, {
+    const res = await axios.post(`${API_BASE}/api/v1/auth/register`, payload, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
@@ -183,8 +187,12 @@ export const otpVerification = (email, otp) => async (dispatch) => {
 
 export const login = (data) => async (dispatch) => {
   dispatch(loginRequest());
+  // Convert FormData to plain object for JSON sending
+  const payload = data instanceof FormData
+    ? Object.fromEntries(data.entries())
+    : data;
   try {
-    const res = await axios.post(`${API_BASE}/api/v1/auth/login`, data, {
+    const res = await axios.post(`${API_BASE}/api/v1/auth/login`, payload, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
