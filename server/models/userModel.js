@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema({
     type:String,
     required:true,
     lowercase: true,
+    // NOT unique at field level - multiple unverified accounts can share an email
+    // Uniqueness is enforced only on verified accounts via the compound index below
     },
 
     password:{
@@ -63,6 +65,14 @@ const userSchema = new mongoose.Schema({
     timestamps:true,
 }
 );
+
+// Compound unique index: only one VERIFIED account per email is allowed.
+// This allows multiple unverified registration attempts (for OTP resend flows).
+userSchema.index({ email: 1, accountVerified: 1 }, {
+    unique: true,
+    partialFilterExpression: { accountVerified: true }
+});
+
 
 userSchema.methods.generateVerificationCode = function(){
     function generateRandomFiveDigitNumber(){
