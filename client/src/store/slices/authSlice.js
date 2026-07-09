@@ -109,9 +109,13 @@ const authSlice = createSlice({
     getUserFailed(state, action) {
       state.loading = false;
       state.fetchingUser = false;
-      state.error = action.payload;
       state.user = null;
       state.isAuthenticated = false;
+      // Only set error if it's a meaningful message (not null/undefined)
+      // Never set error from background auth checks (getUser silently passes null)
+      if (action.payload) {
+        state.error = action.payload;
+      }
       localStorage.removeItem("token");
     },
 
@@ -229,30 +233,31 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
 };
 
 export const getUser = () => async (dispatch) => {
+  const token = localStorage.getItem("token");
+
+  // No token → user is definitely not logged in. Skip the API call entirely.
+  if (!token) {
+    dispatch(getUserFailed(null)); // silently sets isAuthenticated=false, fetchingUser=false
+    return;
+  }
+
   dispatch(getUserRequest());
   try {
-    const token = localStorage.getItem("token");
     const res = await axios.get(`${API_BASE}/api/v1/auth/me`, {
       withCredentials: true,
       headers: {
-        Authorization: token ? `Bearer ${token}` : undefined
+        Authorization: `Bearer ${token}`
       }
     });
     if (!res.data || !res.data.user) {
       dispatch(getUserFailed(null));
-      dispatch(logout(false));
       return;
     }
     dispatch(getUserSuccess(res.data));
   } catch (error) {
-    if (error.response && error.response.status === 401) {
-      // If unauthorized, just silently clear auth
-      dispatch(getUserFailed(null));
-      dispatch(logout(false));
-    } else {
-      dispatch(getUserFailed(error.response?.data?.message || "Failed to fetch user"));
-      dispatch(logout(false));
-    }
+    // Always fail silently — this is a background auth check.
+    // Never set a visible error message here.
+    dispatch(getUserFailed(null));
   }
 };
 
