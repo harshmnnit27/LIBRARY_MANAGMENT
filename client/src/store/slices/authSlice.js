@@ -11,6 +11,7 @@ const authSlice = createSlice({
     message: null,
     user: null,
     isAuthenticated: false,
+    fetchingUser: !!localStorage.getItem("token"), // true if we have a token to verify
   },
   reducers: {
     registerRequest(state) {
@@ -95,16 +96,19 @@ const authSlice = createSlice({
 
     getUserRequest(state) {
       state.loading = true;
+      state.fetchingUser = true;
       state.error = null;
       state.message = null;
     },
     getUserSuccess(state, action) {
       state.loading = false;
+      state.fetchingUser = false;
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },
     getUserFailed(state, action) {
       state.loading = false;
+      state.fetchingUser = false;
       state.error = action.payload;
       state.user = null;
       state.isAuthenticated = false;
