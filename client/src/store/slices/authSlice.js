@@ -104,10 +104,12 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
     },
 
-    logout(state) {
+    logout(state, action) {
       state.user = null;
       state.isAuthenticated = false;
-      state.message = "Logged out successfully";
+      if (action.payload !== false) {
+        state.message = "Logged out successfully";
+      }
     },
 
     resetAuthSlice(state) {
@@ -213,19 +215,19 @@ export const getUser = () => async (dispatch) => {
       withCredentials: true,
     });
     if (!res.data || !res.data.user) {
-      dispatch(getUserFailed("No user returned from backend"));
-      dispatch(logout());
+      dispatch(getUserFailed(null));
+      dispatch(logout(false));
       return;
     }
     dispatch(getUserSuccess(res.data));
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      // If unauthorized, force logout and do not treat as crash
-      dispatch(getUserFailed("Unauthorized. Please log in."));
-      dispatch(logout());
+      // If unauthorized, just silently clear auth
+      dispatch(getUserFailed(null));
+      dispatch(logout(false));
     } else {
       dispatch(getUserFailed(error.response?.data?.message || "Failed to fetch user"));
-      dispatch(logout());
+      dispatch(logout(false));
     }
   }
 };

@@ -9,9 +9,9 @@ const createAdmin = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
 
-    const email = "pandala.20233207@mnnit.ac.in";
-    const password = "Govind@2004";
-    const name = "Pandala Govind";
+    const email = "harshmnnit27@gmail.com";
+    const password = "password123";
+    const name = "Harsh";
     const role = "Admin";
 
     const existingAdmin = await User.findOne({ email });

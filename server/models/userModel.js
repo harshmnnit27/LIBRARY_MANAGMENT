@@ -43,6 +43,9 @@ const userSchema = new mongoose.Schema({
         bookTitle:String,
         borrowedDate:Date,
         dueDate:Date,
+        fineAmount: { type: Number, default: 0 },
+        finePaid: { type: Boolean, default: false },
+        paymentMethod: { type: String, enum: ["Cash", "Online", null], default: null },
 
     },
 ],

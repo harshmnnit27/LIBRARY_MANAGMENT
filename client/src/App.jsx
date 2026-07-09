@@ -19,15 +19,16 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(getUser());
-    dispatch(fetchAllBooks());
-    if(isAuthenticated && user ?.role === "Admin"){
-      dispatch(fetchAllUsers());
-      dispatch(fetchAllBorrowedBooks());
+    if(isAuthenticated){
+      dispatch(fetchAllBooks());
+      if(user?.role === "Admin"){
+        dispatch(fetchAllUsers());
+        dispatch(fetchAllBorrowedBooks());
+      } else if (user?.role === "User"){
+        dispatch(fetchUserBorrowedBooks());
+      }
     }
-    if(isAuthenticated && user ?.role === "User"){
-      dispatch(fetchUserBorrowedBooks());
-    }
-}, [isAuthenticated]);
+}, [isAuthenticated, user?.role, dispatch]);
 
   return (
   <Router>

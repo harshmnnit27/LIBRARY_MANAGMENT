@@ -282,7 +282,10 @@ export const borrowedBooks = catchAsyncErrors(async (req, res, next) => {
 // Controller to record a borrowed book for a user
 export const recordBorrowedBook = catchAsyncErrors(async (req, res, next) => {
   const { bookId } = req.params;
-  const { email } = req.body;
+  let { email } = req.body;
+  if (req.user.role === "User") {
+    email = req.user.email; // Securely override for normal users
+  }
 
   const book = await Book.findById(bookId);
   if (!book) return next(new ErrorHandler("Book not found.", 404));
@@ -292,6 +295,11 @@ export const recordBorrowedBook = catchAsyncErrors(async (req, res, next) => {
 
   if (book.quantity === 0) {
     return next(new ErrorHandler("Book not available.", 400));
+  }
+
+  const hasUnpaidFines = user.borrowBooks?.some((b) => b.fineAmount > 0 && b.finePaid === false);
+  if (hasUnpaidFines) {
+    return next(new ErrorHandler("You have unpaid late fees. Please pay them before borrowing more books.", 403));
   }
 
   const alreadyBorrowed = user.borrowBooks?.find(
@@ -351,7 +359,10 @@ export const getBorrowedBooksForAdmin = catchAsyncErrors(async (req, res, next) 
 // Controller to return a borrowed book
 export const returnBorrowBook = catchAsyncErrors(async (req, res, next) => {
   const { bookId } = req.params;
-  const { email } = req.body;
+  let { email } = req.body;
+  if (req.user.role === "User") {
+    email = req.user.email; // Securely override for normal users
+  }
 
   const book = await Book.findById(bookId);
   if (!book) {
@@ -374,7 +385,6 @@ export const returnBorrowBook = catchAsyncErrors(async (req, res, next) => {
   // Mark book as returned in user document
   borrowedBook.returned = true;
   borrowedBook.returnedDate = new Date();
-  await user.save();
 
   // Update book quantity
   book.quantity += 1;
@@ -393,14 +403,72 @@ export const returnBorrowBook = catchAsyncErrors(async (req, res, next) => {
     borrow.returnDate = new Date();
     fine = calculateFine(borrow.dueDate);
     borrow.fine = fine;
+    if (fine > 0) {
+      borrow.finePaid = false;
+    }
     await borrow.save();
   }
+
+  if (fine > 0) {
+    borrowedBook.fineAmount = fine;
+    borrowedBook.finePaid = false;
+  }
+  await user.save();
 
   res.status(200).json({
     success: true,
     message: fine > 0
       ? `Book returned successfully. A fine of ₹${fine} has been applied.`
       : "Book returned successfully.",
+  });
+});
+
+// Controller to pay a fine
+export const payFine = catchAsyncErrors(async (req, res, next) => {
+  const { bookId } = req.params;
+  const { paymentMethod } = req.body;
+  let email = req.user.email; // Securely use authenticated user
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new ErrorHandler("User not found.", 404));
+  }
+
+  const borrowedBook = user.borrowBooks.find(
+    (b) => b.bookId.toString() === bookId && b.returned === true && b.fineAmount > 0
+  );
+
+  if (!borrowedBook) {
+    return next(new ErrorHandler("No unpaid fine found for this book.", 404));
+  }
+
+  if (borrowedBook.finePaid) {
+    return next(new ErrorHandler("Fine is already paid.", 400));
+  }
+
+  if (!paymentMethod || !["Cash", "Online"].includes(paymentMethod)) {
+    return next(new ErrorHandler("Invalid payment method. Choose Cash or Online.", 400));
+  }
+
+  borrowedBook.finePaid = true;
+  borrowedBook.paymentMethod = paymentMethod;
+  await user.save();
+
+  // Update borrow record
+  const borrow = await Borrow.findOne({
+    book: bookId,
+    "user.email": email,
+  }).sort({ createdAt: -1 });
+
+  if (borrow) {
+    borrow.finePaid = true;
+    borrow.paymentMethod = paymentMethod;
+    await borrow.save();
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Fine of ₹${borrowedBook.fineAmount} paid successfully via ${paymentMethod}.`,
   });
 });
 

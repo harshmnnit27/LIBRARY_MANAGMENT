@@ -44,6 +44,15 @@ returnDate:{
     type: Number,
     default: 0,
   },
+  finePaid: {
+    type: Boolean,
+    default: false,
+  },
+  paymentMethod: {
+    type: String,
+    enum: ["Cash", "Online", null],
+    default: null,
+  },
   notified:{
     type:Boolean,
     default:false

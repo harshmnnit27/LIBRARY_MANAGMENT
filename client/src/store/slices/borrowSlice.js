@@ -69,6 +69,20 @@ const borrowSlice = createSlice({
             state.error=action.payload;
             state.message=null;
         },
+        payFineRequest(state){
+            state.loading=true;
+            state.error=null;
+            state.message=null;
+        },
+        payFineSuccess(state, action){
+            state.loading=false;
+            state.message=action.payload;
+        },
+        payFineFailed(state, action){
+            state.loading=false;
+            state.error=action.payload;
+            state.message=null;
+        },
         resetBorrowSlice(state){
             state.loading=false;
             state.error=null;
@@ -126,6 +140,22 @@ export const recordBorrowBook =({email, bookId})=>async(dispatch)=>{
     });
 };
 
+export const userBorrowBook = ({email, bookId}) => async(dispatch) => {
+    dispatch(borrowSlice.actions.recordBookRequest());
+    await axios.post(`${API_BASE}/api/v1/borrow/record-borrow-book/${bookId}`,
+        {email},{
+            withCredentials:true,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    ).then(res=>{
+        dispatch(borrowSlice.actions.recordBookSuccess(res.data.message));
+    }).catch(err=>{
+        dispatch(borrowSlice.actions.recordBookFailed(err.response.data.message));
+    });
+};
+
 export const returnBook = ({ email, bookId }) => async(dispatch) => {
     dispatch(borrowSlice.actions.returnBookRequest());
     await axios.put(`${API_BASE}/api/v1/borrow/return-borrowed-book/${bookId}`,
@@ -145,6 +175,23 @@ export const returnBook = ({ email, bookId }) => async(dispatch) => {
 
 export const resetBorrowSlice = ()=>(dispatch)=>{
     dispatch(borrowSlice.actions.resetBorrowSlice());
+};
+
+export const payFine = ({ bookId, paymentMethod }) => async(dispatch) => {
+    dispatch(borrowSlice.actions.payFineRequest());
+    await axios.post(`${API_BASE}/api/v1/borrow/pay-fine/${bookId}`,
+       { paymentMethod },
+       {
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+        },
+       } 
+    ).then(res=>{
+        dispatch(borrowSlice.actions.payFineSuccess(res.data.message));
+    }).catch(err=>{
+        dispatch(borrowSlice.actions.payFineFailed(err.response.data.message));
+    });
 };
 
 export default borrowSlice.reducer;

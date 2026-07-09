@@ -2,7 +2,7 @@ import cron from "node-cron";
 import { User } from "../models/userModel.js";
 
 export const removeUnverifiedAccounts = () => {
-  cron.schedule("*/5 * * * * *", async () => {
+  cron.schedule("*/30 * * * *", async () => {
     try {
       const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
 
@@ -11,7 +11,9 @@ export const removeUnverifiedAccounts = () => {
         createdAt: { $lt: thirtyMinutesAgo },
       });
 
-      console.log(`Deleted ${result.deletedCount} unverified accounts.`);
+      if (result.deletedCount > 0) {
+        console.log(`Deleted ${result.deletedCount} unverified accounts.`);
+      }
     } catch (error) {
       console.error("Error while removing unverified accounts:", error);
     }
