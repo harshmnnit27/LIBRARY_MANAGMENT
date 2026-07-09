@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Book } from "./models/bookModel.js";
+import { Book } from "../models/bookModel.js";
 import { config } from "dotenv";
 
 config({ path: "./.env" });

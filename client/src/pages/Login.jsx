@@ -1,202 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import { Navigate, Link } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import logo from "../assets/black-logo.png";
-// import logo_with_title from "../assets/logo-with-title.png";
-// import { useDispatch, useSelector } from "react-redux";
-// import { login, resetAuthSlice } from "../store/slices/authSlice";
-
-
-
-// const Login = () => {
-
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-
-//   const dispatch =useDispatch();
-
-//   const { loading, error, message, user, isAuthenticated} =useSelector( (state) => state.auth);
-
-//   const handleLogin = (e)=>{ e.preventDefault();
-//     const data = new FormData();
-//     data.append("email", email);
-//     data.append("password", password);
-//     dispatch(login(data));
-//   }
-
-//   useEffect(()=>{
-//       if(message){
-//         toast.success(message);
-//         dispatch(resetAuthSlice());
-//       }
-//       if(error){
-//         toast.error(error);
-//         dispatch(resetAuthSlice());
-//       }
-//     }, [dispatch, isAuthenticated, error, loading]);
-  
-//     if(isAuthenticated){
-//       return <Navigate to={"/"} />;
-//     }
-
-//   return <>
-//     <div className="flex flex-col justify-center md:flex-row h-screen">
-//     {/* LEFT SIDE */}
-//     <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-8 relative">  
-//       <div className="max-w-sm w-full">
-//         <div className="flex justify-center mb-12">
-//           <div className="rounded-full flex items-center justify-center">
-//             <img src={logo} alt="logo" className="h-24 w-auto" />
-//           </div>
-//         </div>
-//         <h1 className="text-4xl font-medium text-center mb-12 overflow-hidden">Welcome Back !!</h1>
-//         <p className="text-gray-800 text-center mb-12">Please enter your Credentials to log in.</p>
-//         <form onSubmit = {handleLogin}>
-//           <div className="mb-4">
-//             <input type="email" value={email} onChange={(e)=> setEmail(e.target.value)} placeholder="Email" className="w-full px-4 py-3 border border-black rounded-md focus:outline-none" />
-//           </div>
-//           <div className="mb-4">
-//             <input type="password" value={password} onChange={(e)=> setPassword(e.target.value)} placeholder="Password" className="w-full px-4 py-3 border border-black rounded-md focus:outline-none" />
-//           </div>
-//           <Link to={"/password/forgot"} className="font-semibold text-black mb-12">Forgot Password ?</Link>
-//           <div className="block md:hidden font-semibold mt-5">
-//             <p>New to our platform ?<Link to={"/register"} className="text-sm text-gray-500 hover:underrline"></Link></p>
-//           </div>
-//           <button type="submit" className="border-2 mt-5 border-black w-full font-semibold bg-black text-white py-2 rounded-lg hover:bg-white hover:text-black transition">SIGN IN</button>
-//         </form>
-//       </div>
-//     </div>
-//     {/* RIGHT SIDE */}
-//     <div className="hidden w-full md:w-1/2 bg-black text-white md:flex flex-col items-center justify-center p-8 rounded-t1-[80px] rounded-b1-[80px]">
-//       <div className="text-center h-[400px]">
-//         <div className="flex justify-center mb-12">
-//           <img src={logo_with_title} alt="logo" className="mb-12 h-44 w-auto" />
-//         </div>
-//         <p className="text-gray-300 mb-12">New to our platform? Sign up now.</p>
-//         <Link to={"/register"} className="border-2 mt-5 border-white px-8 w-full font-semibold bg-black text-white py-2 rounded-lg hover:bg-white hover:text-black transition">
-//           SIGN UP
-//         </Link>
-//       </div>
-//     </div>
-//   </div>
-  
-  
-//   </>;
-// };
-
-// export default Login;
-
-// import React, { useEffect, useState } from "react";
-// import { Navigate, Link } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import logo from "../assets/black-logo.png";
-// import logo_with_title from "../assets/logo-with-title.png";
-// import { useDispatch, useSelector } from "react-redux";
-// import { login, resetAuthSlice } from "../store/slices/authSlice";
-
-// const Login = () => {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-
-//   const dispatch = useDispatch();
-//   const { loading, error, message, user, isAuthenticated } = useSelector((state) => state.auth);
-
-//   const handleLogin = (e) => {
-//     e.preventDefault();
-//     const data = new FormData();
-//     data.append("email", email);
-//     data.append("password", password);
-//     dispatch(login(data));
-//   };
-
-//   useEffect(() => {
-//     if (message) {
-//       toast.success(message);
-//       dispatch(resetAuthSlice());
-//     }
-//     if (error) {
-//       toast.error(error);
-//       dispatch(resetAuthSlice());
-//     }
-//   }, [dispatch, isAuthenticated, error, loading]);
-
-//   if (isAuthenticated) {
-//     return <Navigate to={"/"} />;
-//   }
-
-//   return (
-//     <div className="flex flex-col justify-center md:flex-row h-screen">
-//       {/* LEFT SIDE */}
-//       <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-8 relative">
-//         <div className="max-w-sm w-full text-[#001F3F]">
-//           <div className="flex justify-center mb-12">
-//             <div className="rounded-full flex items-center justify-center">
-//               <img src={logo} alt="logo" className="h-24 w-auto" />
-//             </div>
-//           </div>
-//           <h1 className="text-4xl font-medium text-center mb-12">Welcome Back !!</h1>
-//           <p className="text-center mb-12">Please enter your credentials to log in.</p>
-//           <form onSubmit={handleLogin}>
-//             <div className="mb-4">
-//               <input
-//                 type="email"
-//                 value={email}
-//                 onChange={(e) => setEmail(e.target.value)}
-//                 placeholder="Email"
-//                 className="w-full px-4 py-3 border-2 border-[#001F3F] rounded-md focus:outline-none"
-//               />
-//             </div>
-//             <div className="mb-4">
-//               <input
-//                 type="password"
-//                 value={password}
-//                 onChange={(e) => setPassword(e.target.value)}
-//                 placeholder="Password"
-//                 className="w-full px-4 py-3 border-2 border-[#001F3F] rounded-md focus:outline-none"
-//               />
-//             </div>
-//             <Link to={"/password/forgot"} className="block text-sm font-semibold text-[#003366] hover:underline mb-6">
-//               Forgot Password?
-//             </Link>
-//             <div className="block md:hidden font-semibold mt-5 text-sm">
-//               <p>
-//                 New to our platform?{" "}
-//                 <Link to={"/register"} className="text-[#003366] hover:underline">
-//                   Sign up here
-//                 </Link>
-//               </p>
-//             </div>
-//             <button
-//               type="submit"
-//               className="border-2 mt-5 border-[#001F3F] w-full font-semibold bg-[#001F3F] text-white py-2 rounded-lg hover:bg-[#003366] transition"
-//             >
-//               SIGN IN
-//             </button>
-//           </form>
-//         </div>
-//       </div>
-
-//       {/* RIGHT SIDE */}
-//       <div className="hidden w-full md:w-1/2 bg-[#001F3F] text-white md:flex flex-col items-center justify-center p-8">
-//         <div className="text-center h-[400px]">
-//           <div className="flex justify-center mb-12">
-//             <img src={logo_with_title} alt="logo" className="mb-12 h-44 w-auto" />
-//           </div>
-//           <p className="text-gray-300 mb-12">New to our platform? Sign up now.</p>
-//           <Link
-//             to={"/register"}
-//             className="border-2 mt-5 border-white px-8 w-full font-semibold bg-[#001F3F] text-white py-2 rounded-lg hover:bg-white hover:text-[#001F3F] transition"
-//           >
-//             SIGN UP
-//           </Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
 import React, { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -242,7 +43,7 @@ const Login = () => {
       </div>
 
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row relative z-10 border border-[#8C2C07]/20">
-        
+
         {/* Left Section - Form */}
         <div className="w-full md:w-[55%] p-10 sm:p-14 lg:p-16 flex flex-col justify-center bg-[#FDFBF7]">
           <div className="mb-10">
@@ -312,14 +113,14 @@ const Login = () => {
         {/* Right Section - Info Panel */}
         <div className="hidden md:flex w-[45%] bg-[#F4EFE6] relative p-12 items-center justify-center border-l border-stone-200">
           <div className="absolute inset-0 opacity-[0.04] pattern-grid-lg"></div>
-          
+
           <div className="relative z-10 flex flex-col items-center text-center w-full max-w-sm">
             <div className="w-24 h-24 bg-[#FDFBF7] rounded-3xl shadow-sm border border-[#E8DEC3] flex items-center justify-center mb-8">
               <BookOpen className="w-12 h-12 text-[#D95319]" />
             </div>
-            
+
             <h3 className="text-2xl font-bold text-[#4A1504] mb-4 tracking-tight">Wisdom. Discipline. Knowledge.</h3>
-            
+
             <p className="text-stone-600 leading-relaxed mb-10 font-medium">
               Access your digital library, track your borrowed books, and manage your goals in the spirit of the Gurukul.
             </p>
@@ -332,7 +133,7 @@ const Login = () => {
             </div>
           </div>
         </div>
-        
+
       </div>
     </div>
   );

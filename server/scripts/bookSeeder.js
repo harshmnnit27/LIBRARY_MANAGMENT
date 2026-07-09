@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { Book } from "./models/bookModel.js";
+import { Book } from "../models/bookModel.js";
 
 dotenv.config();
 
