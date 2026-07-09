@@ -219,8 +219,12 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
 export const getUser = () => async (dispatch) => {
   dispatch(getUserRequest());
   try {
+    const token = localStorage.getItem("token");
     const res = await axios.get(`${API_BASE}/api/v1/auth/me`, {
       withCredentials: true,
+      headers: {
+        Authorization: token ? `Bearer ${token}` : undefined
+      }
     });
     if (!res.data || !res.data.user) {
       dispatch(getUserFailed(null));
