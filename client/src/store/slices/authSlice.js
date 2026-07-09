@@ -37,6 +37,9 @@ const authSlice = createSlice({
       state.message = action.payload.message;
       state.isAuthenticated = true;
       state.user = action.payload.user;
+      if (action.payload.token) {
+        localStorage.setItem("token", action.payload.token);
+      }
     },
     otpVerificationFailed(state, action) {
       state.loading = false;
@@ -53,6 +56,9 @@ const authSlice = createSlice({
       state.message = action.payload.message;
       state.isAuthenticated = true;
       state.user = action.payload.user;
+      if (action.payload.token) {
+        localStorage.setItem("token", action.payload.token);
+      }
     },
     loginFailed(state, action) {
       state.loading = false;
@@ -102,11 +108,13 @@ const authSlice = createSlice({
       state.error = action.payload;
       state.user = null;
       state.isAuthenticated = false;
+      localStorage.removeItem("token");
     },
 
     logout(state, action) {
       state.user = null;
       state.isAuthenticated = false;
+      localStorage.removeItem("token");
       if (action.payload !== false) {
         state.message = "Logged out successfully";
       }
