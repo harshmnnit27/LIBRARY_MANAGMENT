@@ -20,8 +20,25 @@ const port=process.env.port || 4000;
 
 
 app.use(cors({
-    origin: [process.env.FRONTEND_URL, process.env.BACKEND_URL] ,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        const allowedOrigins = [
+            process.env.FRONTEND_URL?.replace(/\/$/, ""), // Strips trailing slash
+            process.env.BACKEND_URL?.replace(/\/$/, ""),
+            "http://localhost:5173", // Keep local dev working
+            "http://localhost:5174"
+        ];
+        
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log("CORS blocked request from origin:", origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
 }));
 
