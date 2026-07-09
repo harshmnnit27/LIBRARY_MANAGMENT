@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"
 import {User} from "../models/userModel.js"
 
 export const isAuthenticated = catchAsyncErrors(async(req,res,next)=>{
-    const token = req.cookies.token || (req.headers.authorization && req.headers.authorization.startsWith("Bearer") ? req.headers.authorization.split(" ")[1] : null);
+    const token = (req.headers.authorization && req.headers.authorization.startsWith("Bearer") ? req.headers.authorization.split(" ")[1] : null) || (req.cookies && req.cookies.token);
     
     if(!token){
         return next(new ErrorHandler("User is not Authenticated.",401)) // Use 401 Unauthorized
