@@ -40,6 +40,7 @@ app.use(cors({
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 connectDB();
