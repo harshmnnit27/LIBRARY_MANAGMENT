@@ -34,50 +34,66 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* LEFT SECTION */}
-      <div className="hidden md:flex w-1/2 bg-[#001F3F] text-white flex-col items-center justify-center px-8 py-12">
-        <img src={logo_with_title} alt="logo" className="mb-12 h-[250px] w-[250px]" />
-        <h3 className="text-xl text-center max-w-md leading-8">
-          “Access your digital library, track your borrowed books, and manage your goals—all in one place.”
-        </h3>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#4A1504] via-[#7B240B] to-[#5C1A06] p-4 sm:p-8 font-sans relative overflow-hidden">
+      {/* Decorative background blobs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-orange-500/10 blur-[120px]"></div>
+        <div className="absolute top-[60%] -right-[10%] w-[40%] h-[60%] rounded-full bg-amber-500/10 blur-[120px]"></div>
       </div>
 
-      {/* RIGHT SECTION */}
-      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white px-6 py-12 relative">
-        <Link
-          to={"/login"}
-          className="absolute top-6 left-6 text-[#001F3F] hover:underline text-sm"
-        >
-          ← Back to Login
-        </Link>
-        <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-          <div className="flex justify-center mb-6">
-            <img src={logo} alt="logo" className="h-[250px] w-[250px]" />
+      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row relative z-10 border border-[#8C2C07]/20">
+
+        {/* Left Section - Form */}
+        <div className="w-full md:w-[55%] p-10 sm:p-14 lg:p-16 flex flex-col justify-center bg-[#FDFBF7] relative">
+          <Link to={"/login"} className="absolute top-8 left-8 text-stone-500 hover:text-[#D95319] text-sm font-semibold flex items-center gap-1 transition-colors">
+            ← Back to Login
+          </Link>
+
+          <div className="mb-10 mt-6">
+            <h2 className="text-3xl font-bold text-[#4A1504] tracking-tight mb-2">Forgot Password</h2>
+            <p className="text-stone-500 font-medium">Please enter your email to receive a reset link.</p>
           </div>
-          <h2 className="text-2xl font-bold text-center text-[#001F3F]">Forgot Password</h2>
-          <p className="text-sm text-gray-600 text-center mb-6">Please enter your email to receive a reset link.</p>
-          <form onSubmit={handleForgotPassword}>
-            <div className="mb-4">
-              <label className="block mb-1 text-gray-800 font-medium">Email Address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003366]"
-                required
-              />
+
+          <form onSubmit={handleForgotPassword} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-[#5C1A06]">Email Address</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="w-full px-4 py-3.5 bg-white border border-stone-200 text-stone-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D95319]/20 focus:border-[#D95319] transition-all placeholder:text-stone-400"
+                  required
+                />
+              </div>
             </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#001F3F] text-white py-3 rounded-md font-semibold hover:bg-[#003366] transition"
+              className="w-full mt-8 py-3.5 px-4 bg-gradient-to-r from-[#D95319] to-[#BF4311] text-white rounded-xl hover:from-[#BF4311] hover:to-[#A63C11] shadow-lg shadow-[#D95319]/30 transition-all font-semibold flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              RESET PASSWORD
+              {loading ? "Sending..." : "RESET PASSWORD"}
             </button>
           </form>
         </div>
+
+        {/* Right Section - Info Panel */}
+        <div className="hidden md:flex w-[45%] bg-[#F4EFE6] relative p-12 items-center justify-center border-l border-stone-200">
+          <div className="absolute inset-0 opacity-[0.04] pattern-grid-lg"></div>
+
+          <div className="relative z-10 flex flex-col items-center text-center w-full max-w-sm">
+            <img src={logo} alt="logo" className="h-[200px] w-[200px] mb-8 drop-shadow-md" />
+            
+            <h3 className="text-2xl font-bold text-[#4A1504] mb-4 tracking-tight">Access your digital library</h3>
+
+            <p className="text-stone-600 leading-relaxed mb-10 font-medium">
+              Track your borrowed books, and manage your goals—all in one place.
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   );
