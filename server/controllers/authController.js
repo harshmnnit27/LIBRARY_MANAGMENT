@@ -109,10 +109,12 @@ export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
  
 
 export const login = catchAsyncErrors(async(req,res,next)=>{
-    const{email,password}=req.body;
+    console.log("LOGIN ATTEMPT RECEIVED:", req.body);
+    let {email,password}=req.body;
     if(!email || !password){
         return next(new ErrorHandler("Please enter all fields.",400))
     }
+    email = email.trim();
     const user = await User.findOne({email,accountVerified:true}).select(
         "+password")
     if(!user){
