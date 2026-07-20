@@ -19,32 +19,46 @@ const port=process.env.port || 4000;
 
 
 
-app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        
-        const allowedOrigins = [
-            process.env.FRONTEND_URL?.replace(/\/$/, ""),
-            process.env.BACKEND_URL?.replace(/\/$/, ""),
-            "http://localhost:5173",
-            "http://localhost:5174",
-            // Hardcoded Render URLs as fallback in case env vars are not set
-            "https://granthamitra-client.onrender.com",
-            "https://granthamitra.onrender.com",
-        ].filter(Boolean); // remove undefined/null entries
-        
-        if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.log("CORS blocked request from origin:", origin);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// Build allowed origins list once so we can log it and reuse in the CORS policy
+const allowedOrigins = [
+    process.env.FRONTEND_URL?.replace(/\/$/, ""),
+    process.env.BACKEND_URL?.replace(/\/$/, ""),
+    "http://localhost:5173",
+    "http://localhost:5174",
+    // Hardcoded Render URLs as fallback in case env vars are not set
+    "https://granthamitra-client.onrender.com",
+    "https://granthamitra.onrender.com",
+].filter(Boolean); // remove undefined/null entries
+
+// Log allowed origins at startup — useful to verify env config in deployments
+console.log("Allowed origins:", allowedOrigins);
+
+// Optional request-level origin logging when DEBUG_CORS is enabled
+if (process.env.DEBUG_CORS === "true") {
+    app.use((req, res, next) => {
+        console.log("Incoming request origin:", req.get("origin"));
+        next();
+    });
+}
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            // Allow requests with no origin (like mobile apps or curl requests)
+            if (!origin) return callback(null, true);
+
+            if (allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                console.log("CORS blocked request from origin:", origin);
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
 
 connectDB();
 
