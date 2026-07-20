@@ -11,8 +11,9 @@ import { generateForgotPasswordEmailTemplate } from "../utils/emailTemplates.js"
 
 export const register = catchAsyncErrors(async(req , res , next )=>{
     try{
-        const { name, email, password }=req.body;
-        if(!name || !email ||!password){
+        const { name, email: rawEmail, password } = req.body;
+        const email = rawEmail?.trim().toLowerCase();
+        if(!name || !email || !password){
             return next(new ErrorHandler("Please enter all the fields.",400))
         }
         const isRegistered = await User.findOne({ email, accountVerified: true });
@@ -67,7 +68,8 @@ export const register = catchAsyncErrors(async(req , res , next )=>{
 
 
 export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
-    const { email, otp } = req.body;
+    const { email: rawEmail, otp } = req.body;
+    const email = rawEmail?.trim().toLowerCase();
     
     if (!email || !otp) {
         return next(new ErrorHandler("Email or OTP is missing.", 400));
@@ -125,7 +127,7 @@ export const login = catchAsyncErrors(async(req,res,next)=>{
     if(!email || !password){
         return next(new ErrorHandler("Please enter all fields.",400))
     }
-    email = email.trim();
+    email = email.trim().toLowerCase();
     const user = await User.findOne({email,accountVerified:true}).select(
         "+password")
     if(!user){
@@ -167,15 +169,18 @@ export const getUser = catchAsyncErrors(async(req,res,next)=>{
 })
 
 export const forgotPassword = catchAsyncErrors(async(req,res,next)=>{
-    if(!req.body.email){
+    const email = req.body.email?.trim().toLowerCase();
+    if(!email){
         return next(new ErrorHandler("Email is required.",400))
     }
     const user = await User.findOne({
-        email:req.body.email,
-        accountVerified:true,
+        email,
     })
     if(!user){
         return next(new ErrorHandler("Invalid email.",400))
+    }
+    if(!user.accountVerified){
+        return next(new ErrorHandler("Email is registered but not verified. Please verify your account before resetting password.",400));
     }
 
     const resetToken = user.getResetPasswordToken();
@@ -196,7 +201,7 @@ export const forgotPassword = catchAsyncErrors(async(req,res,next)=>{
         })
 
     }catch(error){
-        user.resetasswordToken=undefined;
+        user.resetPasswordToken=undefined;
         user.resetPasswordExpire=undefined;
         await user.save({validateBeforeSave:false});
         return next(new ErrorHandler(error.message,500))
