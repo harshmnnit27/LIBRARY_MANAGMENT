@@ -15,38 +15,49 @@ export const register = catchAsyncErrors(async(req , res , next )=>{
         if(!name || !email ||!password){
             return next(new ErrorHandler("Please enter all the fields.",400))
         }
-        const isRegistered = await User.findOne({email,accountVerified:true});
-        if(isRegistered){
-            return next(new ErrorHandler("User already Exist",400))
+        const isRegistered = await User.findOne({ email, accountVerified: true });
+        if (isRegistered) {
+            return next(new ErrorHandler("User already Exist", 400));
         }
-        const  registrationAttemptsByUser = await User.find({
-            email,
-            accountVerified:false,
-        });
 
-        if(registrationAttemptsByUser.length >=5){
+        const registrationAttemptsByUser = await User.find({
+            email,
+            accountVerified: false,
+        }).sort({ createdAt: -1 });
+
+        if (registrationAttemptsByUser.length >= 5) {
             return next(
                 new ErrorHandler(
-                    "You have exceeded the number of registration attempts.Please contact support.",400
+                    "You have exceeded the number of registration attempts. Please contact support.",
+                    400
                 )
             );
         }
 
-        if(password.length < 8 || password.length >16){
-            return next(new ErrorHandler("Password must be between 8 and 16 characters.",400))
+        if (password.length < 8 || password.length > 16) {
+            return next(new ErrorHandler("Password must be between 8 and 16 characters.", 400));
         }
 
-        const hashedPassword = await bcrypt.hash(password,10)
-        const user = await User.create({
-            name,
-            email,
-            password:hashedPassword,
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        })
+        let user;
+        if (registrationAttemptsByUser.length > 0) {
+            user = registrationAttemptsByUser[0];
+            user.name = name;
+            user.password = hashedPassword;
+            user.verificationCode = undefined;
+            user.verificationCodeExpire = undefined;
+        } else {
+            user = await User.create({
+                name,
+                email,
+                password: hashedPassword,
+            });
+        }
 
         const verificationCode = await user.generateVerificationCode();
         await user.save();
-        sendVerificationCode(verificationCode,email,res);
+        sendVerificationCode(verificationCode, email, res);
 
     }  catch (error){
         next(error);
