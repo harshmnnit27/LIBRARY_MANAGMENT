@@ -222,7 +222,7 @@ export const forgotPassword = (email) => async (dispatch) => {
 export const resetPassword = (token, passwords) => async (dispatch) => {
   dispatch(resetPasswordRequest());
   try {
-    const res = await axios.post(`${API_BASE}/api/v1/auth/reset-password/${token}`, passwords, {
+    const res = await axios.put(`${API_BASE}/api/v1/auth/reset-password/${token}`, passwords, {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });

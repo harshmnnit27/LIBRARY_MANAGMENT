@@ -17,10 +17,8 @@ const ResetPassword = () => {
 
   const handleResetPassword = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("password", password);
-    formData.append("confirmPassword", confirmPassword);
-    dispatch(resetPassword(formData, token));
+    const formData = { password, confirmPassword };
+    dispatch(resetPassword(token, formData));
   };
 
   useEffect(() => {
