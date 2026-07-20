@@ -15,6 +15,13 @@ config();
 export const app = express();
 const port=process.env.port || 4000;
 
+// When running behind a proxy (like Render, Heroku, or Nginx), enable trust proxy
+// so Express can correctly detect secure connections and protocol-related headers.
+if (process.env.TRUST_PROXY === "true" || process.env.NODE_ENV === "production") {
+    app.set("trust proxy", 1);
+    console.log("Express trust proxy enabled");
+}
+
 
 
 
